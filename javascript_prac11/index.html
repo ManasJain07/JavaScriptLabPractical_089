@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Practical 11 – Timers & Modules</title>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body { 
+    font-family: Arial, sans-serif; 
+    padding: 20px; 
+    transition: 0.3s;
+    background: #f9f9f9;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  #sessions {
+    max-width: 450px;
+    margin: auto;
+  }
+
+  .session { 
+    padding: 12px; 
+    margin: 8px 0; 
+    border: 1px solid #ccc; 
+    border-radius: 6px; 
+    background: white;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .session:hover {
+    background: #f1f1f1;
+  }
+
+  .active { 
+    background: #c8f7c5 !important;
+    border-color: #60b15c;
+  }
+
+  button {
+    padding: 10px 15px;
+    margin-top: 10px;
+    border: none;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background: #005fcc;
+  }
+
+  #countdown {
+    margin-top: 15px;
+    font-size: 18px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  #countdown.red { 
+    color: red; 
+  }
+
+  @media (max-width:500px) {
+    body { font-size: 14px; }
+    button { width: 100%; }
+    #sessions { width: 100%; }
+  }
+</style>
+</head>
+
+<body>
+<h2>Class Scheduler (with Timers & Modules)</h2>
+
+<div id="sessions">
+  <div class="session" data-time="09:00">HTML Basics - 9:00 AM</div>
+  <div class="session" data-time="10:00">CSS Design - 10:00 AM</div>
+  <div class="session" data-time="11:00">JavaScript Logic - 11:00 AM</div>
+</div>
+
+<button id="addSession">Add Session</button>
+
+<p id="countdown"></p>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
