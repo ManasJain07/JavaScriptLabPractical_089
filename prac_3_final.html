@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Grading Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background-color: #96b07c;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: rgb(0, 68, 97);
+    }
+
+    .student-box {
+      display: flex;
+      justify-content: space-between;
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+    }
+
+    .info-col,
+    .marks-col {
+      width: 48%;
+    }
+
+    .top-scorer {
+      border: 3px solid green;
+      background-color: #e6ffe6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Simple Grading Dashboard</h2>
+
+  <form id="gradeForm">
+    <!-- Student 1 -->
+    <div class="student-box">
+      <div class="info-col">
+        <h3>Student 1</h3>
+        Name: <input type="text" id="name1"><br>
+        Roll No: <input type="text" id="roll1"><br>
+      </div>
+      <div class="marks-col">
+        Science: <input type="range" id="sci1" min="0" max="100"><br>
+        Math: <input type="number" id="math1" min="0" max="100"><br>
+        English: <input type="number" id="eng1" min="0" max="100"><br>
+      </div>
+    </div>
+
+    <!-- Student 2 -->
+    <div class="student-box">
+      <div class="info-col">
+        <h3>Student 2</h3>
+        Name: <input type="text" id="name2"><br>
+        Roll No: <input type="text" id="roll2"><br>
+      </div>
+      <div class="marks-col">
+        Science: <input type="range" id="sci2" min="0" max="100"><br> 
+        Math: <input type="number" id="math2" min="0" max="100"><br>
+        English: <input type="number" id="eng2" min="0" max="100"><br>
+      </div>
+    </div>
+
+    <!-- Student 3 -->
+    <div class="student-box">
+      <div class="info-col">
+        <h3>Student 3</h3>
+        Name: <input type="text" id="name3"><br>
+        Roll No: <input type="text" id="roll3"><br>
+      </div>
+      <div class="marks-col">
+        Science: <input type="range" id="sci3" min="0" max="100"><br>
+        Math: <input type="number" id="math3" min="0" max="100"><br>
+        English: <input type="number" id="eng3" min="0" max="100"><br>
+      </div>
+    </div>
+
+    <br>
+    <button type="submit">Submit Grades</button>
+  </form>
+
+  <h2>Results</h2>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById("gradeForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "";
+
+      var topAvg = 0;
+      var students = [];
+
+      for (var i = 1; i <= 3; i++) {
+        var name = document.getElementById("name" + i).value;
+        var roll = document.getElementById("roll" + i).value;
+        var math = parseInt(document.getElementById("math" + i).value);
+        var sci = parseInt(document.getElementById("sci" + i).value);
+        var eng = parseInt(document.getElementById("eng" + i).value);
+
+        if (math < 0 || math > 100 || sci < 0 || sci > 100 || eng < 0 || eng > 100) {
+          alert("Invalid marks for Student " + i);
+          return;
+        }
+
+        var avg = (math + sci + eng) / 3;
+        var grade = "";
+        if (avg >= 90) grade = "A";
+        else if (avg >= 75) grade = "B";
+        else if (avg >= 60) grade = "C";
+        else if (avg >= 40) grade = "D";
+        else grade = "F";
+
+        var remarks = "";
+        switch (true) {
+          case (avg >= 90): remarks = "Excellent"; break;
+          case (avg >= 75): remarks = "Very Good"; break;
+          case (avg >= 60): remarks = "Good"; break;
+          case (avg >= 40): remarks = "Needs Improvement"; break;
+          default: remarks = "Fail - Try harder";
+        }
+
+        if (avg > topAvg) topAvg = avg;
+
+        students.push({
+          name: name,
+          roll: roll,
+          avg: avg,
+          grade: grade,
+          remarks: remarks
+        });
+      }
+
+      for (var j = 0; j < students.length; j++) {
+        var s = students[j];
+        var card = document.createElement("div");
+        card.className = "student-box";
+        if (s.avg === topAvg) card.classList.add("top-scorer");
+
+        card.innerHTML = `
+      <div class="info-col">
+        <h3>${s.name} (${s.roll})</h3>
+      </div>
+      <div class="marks-col">
+        <p>Average: ${s.avg.toFixed(2)}</p>
+        <p>Grade: ${s.grade}</p>
+        <p>Remarks: ${s.remarks}</p>
+      </div>
+    `;
+
+        resultDiv.appendChild(card);
+      }
+    });
+  </script>
+
+</body>
+
+</html>

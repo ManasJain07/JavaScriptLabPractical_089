@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Personal Dashboard</title>
+<style>
+  body {
+    font-family: Verdana, sans-serif;
+    transition: all 0.4s ease;
+    text-align: center;
+    padding: 20px;
+  }
+  .dark { background: #121212; color: white; }
+  .light { background: #ffffff; color: black; }
+  #controls button, select {
+    margin: 6px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<h1 id="welcomeText">Welcome!</h1>
+
+<div id="controls">
+  <input type="text" id="userName" placeholder="Enter your name">
+  <button id="saveUser">Save Name</button>
+  <button id="themeBtn">Switch Theme</button>
+  <select id="fontChooser">
+    <option value="small">Small</option>
+    <option value="medium">Medium</option>
+    <option value="large">Large</option>
+  </select>
+  <button id="resetPrefs">Reset Preferences</button>
+</div>
+
+<p id="tabCounter"></p>
+
+<h3>Feedback</h3>
+<textarea id="feedback" rows="5" cols="40" placeholder="Your feedback..."></textarea>
+
+<script>
+let theme = localStorage.getItem("theme") || "light";
+document.body.classList.add(theme);
+
+document.getElementById("themeBtn").onclick = () => {
+  theme = (theme === "light") ? "dark" : "light";
+  document.body.classList.remove("light","dark");
+  document.body.classList.add(theme);
+  localStorage.setItem("theme", theme);
+};
+
+const fSelect = document.getElementById("fontChooser");
+fSelect.onchange = () => {
+  let f = fSelect.value;
+  document.body.style.fontSize = f;
+  localStorage.setItem("fontSizePref", f);
+};
+let savedFont = localStorage.getItem("fontSizePref");
+if(savedFont){
+  document.body.style.fontSize = savedFont;
+  fSelect.value = savedFont;
+}
+
+document.getElementById("saveUser").onclick = () => {
+  let user = document.getElementById("userName").value;
+  localStorage.setItem("username", user);
+  document.getElementById("welcomeText").innerText = "Welcome, " + user;
+};
+let savedUser = localStorage.getItem("username");
+if(savedUser){
+  document.getElementById("welcomeText").innerText = "Welcome, " + savedUser;
+}
+
+let count = Number(sessionStorage.getItem("visits")) || 0;
+count++;
+sessionStorage.setItem("visits", count);
+document.getElementById("tabCounter").innerHTML =
+  `This tab has been refreshed ${count} times.`;
+
+const fb = document.getElementById("feedback");
+fb.addEventListener("keyup", () => {
+  sessionStorage.setItem("feedbackText", fb.value);
+});
+if(sessionStorage.getItem("feedbackText")){
+  fb.value = sessionStorage.getItem("feedbackText");
+}
+
+document.getElementById("resetPrefs").onclick = () => {
+  localStorage.clear();
+  location.reload();
+};
+</script>
+
+</body>
+</html>

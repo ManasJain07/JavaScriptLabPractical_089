@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Document</title>
+</head>
+
+<body>
+    <form>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <br><br>
+        <label for="confirmPassword">Confirm Password:</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+    <button onclick=" validate()">Submit</button>
+                <script>
+                    function validate() {
+                        function validateForm(event) {
+                            const passwordField = document.getElementById("password");
+                            const confirmPasswordField = document.getElementById("confirmPassword");
+
+                            confirmPasswordField.setCustomValidity('');
+
+                            if (passwordField.value !== confirmPasswordField.value) {
+                                confirmPasswordField.setCustomValidity("Passwords do not match!");
+                            }
+
+                            if (!confirmPasswordField.reportValidity()) {
+                                event.preventDefault(); 
+                            }
+                        }
+                    }
+                </script>
+</body>
+
+</html>

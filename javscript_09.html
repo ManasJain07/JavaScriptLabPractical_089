@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Theme Switcher</title>
+<style>
+body {
+font-family: Arial;
+text-align: center;
+transition: background-color 0.5s, color 0.5s;
+}
+.dark {
+background-color: #121212;
+color: white;
+}
+.light {
+background-color: #ffffff;
+color: black;
+}
+button {
+margin: 10px;
+padding: 10px 20px;
+border: none;
+cursor: pointer;
+border-radius: 5px;
+}
+
+/* Font size classes */
+.font-small {
+  font-size: 8px;
+}
+
+.font-medium {
+  font-size: 16px;
+}
+
+.font-large {
+  font-size: 26px;
+}
+
+/* Active button style */
+.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.controls {
+  margin: 20px 0;
+}
+
+.font-controls {
+  margin-top: 20px;
+}
+</style>
+</head>
+<body>
+<h1>Theme Switcher with localStorage</h1>
+<button id="toggleTheme">Toggle Theme</button>
+
+<div class="font-controls">
+  <h3>Font Size</h3>
+  <div class="controls">
+    <button id="fontSmall" class="font-size-btn">Small</button>
+    <button id="fontMedium" class="font-size-btn active">Medium</button>
+    <button id="fontLarge" class="font-size-btn">Large</button>
+  </div>
+</div>
+
+<script>
+const body = document.body;
+const btn = document.getElementById("toggleTheme");
+const fontSmallBtn = document.getElementById("fontSmall");
+const fontMediumBtn = document.getElementById("fontMedium");
+const fontLargeBtn = document.getElementById("fontLarge");
+
+// 1. Load theme from localStorage on page load
+const savedTheme = localStorage.getItem("theme") || "light";
+body.classList.add(savedTheme);
+
+// Load font size from localStorage
+const savedFontSize = localStorage.getItem("fontSize") || "medium";
+body.classList.add(`font-${savedFontSize}`);
+updateFontButtons(savedFontSize);
+
+// 2. Update button text
+btn.textContent = savedTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+
+// 3. Toggle theme and save to localStorage
+btn.addEventListener("click", () => {
+const newTheme = body.classList.contains("dark") ? "light" : "dark";
+body.className = `font-${savedFontSize} ${newTheme}`; // switch theme
+localStorage.setItem("theme", newTheme);
+btn.textContent = newTheme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode";
+});
+
+// Font size button event listeners
+fontSmallBtn.addEventListener("click", () => setFontSize("small"));
+fontMediumBtn.addEventListener("click", () => setFontSize("medium"));
+fontLargeBtn.addEventListener("click", () => setFontSize("large"));
+
+function setFontSize(size) {
+  // Remove existing font size classes
+  body.classList.remove("font-small", "font-medium", "font-large");
+  
+  // Add new font size class
+  body.classList.add(`font-${size}`);
+  
+  // Save to localStorage
+  localStorage.setItem("fontSize", size);
+  
+  // Update button states
+  updateFontButtons(size);
+}
+
+function updateFontButtons(activeSize) {
+  // Remove active class from all buttons
+  fontSmallBtn.classList.remove("active");
+  fontMediumBtn.classList.remove("active");
+  fontLargeBtn.classList.remove("active");
+  
+  // Add active class to current button
+  document.getElementById(`font${activeSize.charAt(0).toUpperCase() + activeSize.slice(1)}`).classList.add("active");
+}
+</script>
+</body>
+</html>

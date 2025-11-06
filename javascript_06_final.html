@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Job Application Analyzer</title>
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      background: #acff8e;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 900px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .row {
+      display: flex;
+      gap: 20px;
+    }
+    .col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    textarea {
+      flex: 1;
+      resize: vertical;
+      min-height: 250px;
+      padding: 10px;
+      font-size: 14px;
+      background: #fff8df;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      background: #003ce0;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .results {
+      background: #fff8df;
+      padding: 15px;
+      border-radius: 6px;
+      font-size: 14px;
+      line-height: 1.6;
+      flex: 1;
+    }
+    .results div {
+      margin-bottom: 8px;
+    }
+    .results span {
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Smart Job Application Analyzer</h2>
+    <div class="row">
+      <div class="col">
+        <label for="applicationInput"><b>Paste text:</b></label>
+        <textarea id="applicationInput"></textarea>
+        <button onclick="runAnalysis()">Analyze</button>
+      </div>
+      <div class="col">
+        <label><b>Results:</b></label>
+        <div id="output" class="results"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function formatName(rawName) {
+      return rawName.trim().split(/\s+/)
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+        .join(" ");
+    }
+    function extractEmails(text) {
+      let emailRegex = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
+      let emails = text.match(emailRegex) || [];
+      return emails.map(e => e.toLowerCase());
+    }
+    function validatePhone(text) {
+      let phoneRegex = /\+\d{1,3}-\d{10}/;
+      let phone = text.match(phoneRegex);
+      if (!phone) return "Invalid phone number";
+      let numberPart = phone[0].split("-")[1];
+      return /^[6-9]/.test(numberPart) ? phone[0] : "Invalid phone number";
+    }
+    function extractSkills(text) {
+      let skillsLine = text.match(/Skills:(.*)/i);
+      if (!skillsLine) return [];
+      return skillsLine[1].split(/[,|]/).map(s => s.trim()).filter(Boolean);
+    }
+    function extractHashtags(text) {
+      let hashRegex = /#[A-Za-z0-9]+/g;
+      return text.match(hashRegex) || [];
+    }
+    function extractSalary(text) {
+      let salaryLine = text.match(/Salary[: ]+([\w\s.,$]+)/i);
+      if (!salaryLine) return null;
+      let numMatch = salaryLine[1].replace(/[^\d]/g, "");
+      return numMatch ? parseInt(numMatch, 10) : null;
+    }
+    function countWords(text) {
+      return text.trim().split(/\s+/).filter(Boolean).length;
+    }
+    function countVowels(text) {
+      let matches = text.match(/[aeiou]/gi);
+      return matches ? matches.length : 0;
+    }
+    function analyzeApplication(application) {
+      let nameLine = application.match(/Applicant:\s*([^\n]+)/i);
+      let applicant = nameLine ? formatName(nameLine[1]) : "Unknown";
+      let emails = extractEmails(application);
+      return {
+        applicant,
+        primaryEmail: emails[0] || "Not found",
+        altEmails: emails.slice(1),
+        phone: validatePhone(application),
+        skills: extractSkills(application),
+        hashtags: extractHashtags(application),
+        salary: extractSalary(application) || "Not mentioned",
+        wordCount: countWords(application),
+        vowelCount: countVowels(application)
+      };
+    }
+    function runAnalysis() {
+      let input = document.getElementById("applicationInput").value;
+      if (!input.trim()) {
+        alert("Please paste job application text first!");
+        return;
+      }
+      let result = analyzeApplication(input);
+      let outputHTML = `
+        <div><span>Applicant:</span> ${result.applicant}</div>
+        <div><span>Primary Email:</span> ${result.primaryEmail}</div>
+        <div><span>Other Emails:</span> ${result.altEmails.join(", ") || "None"}</div>
+        <div><span>Phone:</span> ${result.phone}</div>
+        <div><span>Skills:</span> ${result.skills.join(", ") || "Not mentioned"}</div>
+        <div><span>Hashtags:</span> ${result.hashtags.join(", ") || "None"}</div>
+        <div><span>Expected Salary:</span> ${result.salary}</div>
+        <div><span>Total Words:</span> ${result.wordCount}</div>
+        <div><span>Vowel Count:</span> ${result.vowelCount}</div>
+      `;
+      document.getElementById("output").innerHTML = outputHTML;
+    }
+  </script>
+</body>
+</html>

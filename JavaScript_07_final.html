@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Traffic Light Simulator</title>
+    <style>
+        :root {
+            --bg: #222;
+            --panel: #111;
+            --glass: #1b1b1b;
+            --off: #333;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #0f1724, #071027);
+            color: #fff
+        }
+
+        .container {
+            display: flex;
+            gap: 40px;
+            align-items: center
+        }
+
+        .traffic {
+            background: var(--panel);
+            padding: 18px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .6);
+            width: 120px
+        }
+
+        .lamp {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--off);
+            margin: 12px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 -6px 12px rgba(0, 0, 0, .35)
+        }
+
+        .lamp[data-color="red"] {
+            --on: #ff3b30
+        }
+
+        .lamp[data-color="yellow"] {
+            --on: #ffd60a
+        }
+
+        .lamp[data-color="green"] {
+            --on: #32d74b
+        }
+
+        .lamp.on {
+            background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, .2) 0%, transparent 20%), var(--on);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .6), 0 0 30px rgba(255, 255, 255, .06)
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 12px
+        }
+
+        button {
+            background: #0b1220;
+            border: 1px solid rgba(255, 255, 255, .06);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600
+        }
+
+        button:active {
+            transform: translateY(1px)
+        }
+
+        .muted {
+            font-size: .85rem;
+            color: #cbd5e1;
+            text-align: center
+        }
+
+        button:focus {
+            outline: 3px solid rgba(99, 102, 241, .18)
+        }
+
+        @media (max-width:480px) {
+            .container {
+                flex-direction: column
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="traffic" role="group" aria-label="Traffic light">
+            <div class="lamp" data-color="red" id="red" aria-live="polite" aria-checked="false" role="img"
+                title="Red light"></div>
+            <div class="lamp" data-color="yellow" id="yellow" aria-live="polite" aria-checked="false" role="img"
+                title="Yellow light"></div>
+            <div class="lamp" data-color="green" id="green" aria-live="polite" aria-checked="false" role="img"
+                title="Green light"></div>
+        </div>
+        <div class="controls">
+            <div style="display:flex;gap:8px">
+                <button id="nextBtn" aria-label="Next light">Next</button>
+                <button id="autoBtn" aria-pressed="false" aria-label="Toggle auto mode">Auto </button>
+            </div>
+            <div class="muted">Tip: press <kbd>Space</kbd> for Next, <kbd>A</kbd> to toggle Auto</div>
+            <div id="status" class="muted" aria-live="polite">Current: Red</div>
+        </div>
+    </div>
+    <script>
+        const lights = [
+            document.querySelector('#red'),
+            document.querySelector('#yellow'),
+            document.querySelector('#green')
+        ];
+        const nextBtn = document.querySelector('#nextBtn');
+        const autoBtn = document.querySelector('#autoBtn');
+        const status = document.querySelector('#status');
+        let current = 0;
+        let intervalId = null;
+        const AUTO_DELAY = 1500;
+        function updateLights() {
+            lights.forEach((el, idx) => {
+                if (idx === current) {
+                    el.classList.add('on');
+                    el.setAttribute('aria-checked', 'true');
+                } else {
+                    el.classList.remove('on');
+                    el.setAttribute('aria-checked', 'false');
+                }
+            });
+            const name = lights[current].dataset.color;
+            status.textContent = `Current: ${name.charAt(0).toUpperCase() + name.slice(1)}`;
+        }
+        function nextLight() {
+            if (current === 0) current = 2;
+            else if (current === 2) current = 1;
+            else current = 0;
+            updateLights();
+        }
+        nextBtn.addEventListener('click', () => {
+            nextLight();
+        });
+        autoBtn.addEventListener('click', () => {
+            toggleAuto();
+        });
+        function startAuto() {
+            if (intervalId) return;
+            intervalId = setInterval(() => {
+                nextLight();
+            }, AUTO_DELAY);
+            autoBtn.setAttribute('aria-pressed', 'true');
+            autoBtn.textContent = 'Auto ⏸';
+        }
+        function stopAuto() {
+            if (!intervalId) return;
+            clearInterval(intervalId);
+            intervalId = null;
+            autoBtn.setAttribute('aria-pressed', 'false');
+            autoBtn.textContent = 'Auto ⏵';
+        }
+        function toggleAuto() {
+            if (intervalId) stopAuto(); else startAuto();
+        }
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                nextBtn.click();
+            } else if (e.key.toLowerCase() === 'a') {
+                autoBtn.click();
+            }
+        });
+        updateLights();
+        window.traffic = { nextLight, startAuto, stopAuto, toggleAuto };
+    </script>
+</body>
+
+</html>

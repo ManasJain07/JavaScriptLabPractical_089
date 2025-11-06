@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cart Total Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    #receipt { background: #f9f9f9; padding: 15px; border: 1px solid #ccc; width: 300px; }
+    h2 { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Shopping Cart Receipt</h2>
+  <div id="receipt"></div>
+
+  <script>
+    let cart = [
+      { id: 1, name: "Pen", price: 20, qty: 2, category: "stationery" },
+      { id: 2, name: "Mug", price: 150, qty: 1, category: "kitchen" },
+      { id: 3, name: "Notebook", price: 80, qty: 3, category: "stationery" }
+    ];
+
+    let receiptDiv = document.getElementById("receipt");
+
+    let itemTotals = cart.map(item => item.price * item.qty);
+
+    let discountedItemTotals = cart.map(item => {
+      let subtotal = item.price * item.qty;
+      if (item.qty >= 3) {
+        subtotal = subtotal - (subtotal * 0.05);
+      }
+      return subtotal;
+    });
+
+    let itemDiscounts = cart.reduce((sum, item) => {
+      let subtotal = item.price * item.qty;
+      if (item.qty >= 3) {
+        sum += subtotal * 0.05;
+      }
+      return sum;
+    }, 0);
+
+    let stationeryItems = cart.filter(item => item.category === "stationery");
+    let stationeryTotal = stationeryItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+    let stationeryDiscount = 0;
+    if (stationeryTotal > 200) {
+      stationeryDiscount = stationeryTotal * 0.10;
+    }
+
+    let subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    let finalTotal = subtotal - itemDiscounts - stationeryDiscount;
+
+    cart.forEach(item => {
+      let subtotal = item.price * item.qty;
+      if (item.qty >= 3) {
+        receiptDiv.innerHTML += `Item: ${item.name} (x${item.qty}) = ${subtotal} → discount applied<br>`;
+      } else {
+        receiptDiv.innerHTML += `Item: ${item.name} (x${item.qty}) = ${subtotal}<br>`;
+      }
+    });
+
+    receiptDiv.innerHTML += "---------------------------------<br>";
+    receiptDiv.innerHTML += `Subtotal: ${subtotal}<br>`;
+    receiptDiv.innerHTML += `Item Discounts: ${itemDiscounts.toFixed(2)}<br>`;
+    receiptDiv.innerHTML += `Stationery Discount: ${stationeryDiscount.toFixed(2)}<br>`;
+    receiptDiv.innerHTML += `<b>Final Total: ${finalTotal.toFixed(2)}</b><br>`;
+  </script>
+</body>
+</html>

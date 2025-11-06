@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitZone Gym Admission Form</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #457b9d;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background-color: #1d3557;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            max-width: 90vw;
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #f1faee;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .form-label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #f1faee;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .radio-group {
+            margin-top: 8px;
+        }
+
+        .radio-option {
+            margin-right: 15px;
+            margin-bottom: 5px;
+            color: #f1faee;
+        }
+
+        .form-input.valid {
+            border-color: #27ae60;
+        }
+
+        .form-input.invalid {
+            border-color: #e74c3c;
+        }
+
+        .error-message {
+            font-size: 12px;
+            color: #e74c3c;
+            margin-top: 4px;
+            min-height: 16px;
+            display: block;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 10px;
+            color: #f1faee;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #2980b9;
+        }
+
+        .btn-primary:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .success-message {
+            color: #27ae60;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        .checkbox-container {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            color: #f1faee;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <form id="gymForm">
+            <h2 class="form-title">FitZone Gym Admission</h2>
+
+            <label class="form-label" for="fullName">Full Name:</label>
+            <input type="text" id="fullName" class="form-input" required>
+            <span class="error-message" id="nameMsg"></span>
+
+            <label class="form-label" for="email">Email:</label>
+            <input type="email" id="email" class="form-input" required>
+            <span class="error-message" id="emailMsg"></span>
+
+            <label class="form-label" for="age">Age:</label>
+            <input type="number" id="age" class="form-input" required>
+            <span class="error-message" id="ageMsg"></span>
+
+            <label class="form-label">Gender:</label>
+            <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="gender" value="Male"> Male</label>
+                <label class="radio-option"><input type="radio" name="gender" value="Female"> Female</label>
+                <label class="radio-option"><input type="radio" name="gender" value="Other"> Other</label>
+            </div>
+            <span class="error-message" id="genderMsg"></span>
+
+            <label class="form-label" for="membership">Membership:</label>
+            <select id="membership" class="form-select">
+                <option value="">-- Select --</option>
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="yearly">Yearly</option>
+            </select>
+            <span class="error-message" id="membershipMsg"></span>
+
+            <label class="form-label" for="password">Password:</label>
+            <input type="password" id="password" class="form-input" required>
+            <span class="error-message" id="passMsg"></span>
+
+            <label class="form-label" for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" class="form-input" required>
+            <span class="error-message" id="confirmMsg"></span>
+
+            <label class="form-label" for="phone">Phone:</label>
+            <input type="text" id="phone" class="form-input" required maxlength="10">
+            <span class="error-message" id="phoneMsg"></span>
+
+            <label class="form-label" for="dob">Date of Birth:</label>
+            <input type="date" id="dob" class="form-input" required>
+            <span class="error-message" id="dobMsg"></span>
+
+            <label class="form-label" for="photo">Profile Photo:</label>
+            <input type="file" id="photo" class="form-input" accept=".jpg,.png" required>
+            <span class="error-message" id="photoMsg"></span>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">I agree to Terms & Conditions</label>
+            </div>
+            <span class="error-message" id="termsMsg"></span>
+
+            <div class="button-group">
+                <button type="submit" id="submitBtn" class="btn btn-primary" disabled>Submit</button>
+                <button type="reset" class="btn btn-secondary">Reset</button>
+            </div>
+
+            <div id="success" class="success-message"></div>
+        </form>
+    </div>
+
+    <script>
+        const gymForm = document.getElementById('gymForm');
+        const submitButton = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('success');
+
+        successMessage.textContent = "";
+
+        function displayValidationMessage(fieldId, message) {
+            const messageElement = document.getElementById(fieldId + "Msg");
+            const inputElement = document.getElementById(fieldId);
+
+            messageElement.textContent = message;
+
+            if (inputElement) {
+                inputElement.classList.remove("valid", "invalid");
+                inputElement.classList.add(message === "" ? "valid" : "invalid");
+            }
+
+            checkFormValidity();
+        }
+
+        function checkFormValidity() {
+            const validInputs = document.querySelectorAll('input.valid').length;
+            const validSelects = document.querySelectorAll('select.valid').length;
+            const genderSelected = document.querySelector('input[name="gender"]:checked');
+            const membershipSelected = document.getElementById('membership').value;
+            const termsAccepted = document.getElementById('terms').checked;
+
+            const totalValidFields = validInputs + validSelects;
+            submitButton.disabled = !(totalValidFields >= 11 && genderSelected && membershipSelected && termsAccepted);
+        }
+
+        document.getElementById('fullName').addEventListener('input', function (event) {
+            const nameValue = event.target.value.trim();
+            const isValid = /^[A-Za-z ]{3,}$/.test(nameValue);
+            displayValidationMessage("fullName", isValid ? "" : "Name must be at least 3 letters and contain only alphabets");
+        });
+
+        document.getElementById('email').addEventListener('input', function (event) {
+            const emailValue = event.target.value;
+            const isValid = /^[^@]+@[^@]+\.[^@]+$/.test(emailValue);
+            displayValidationMessage("email", isValid ? "" : "Please enter a valid email address");
+        });
+
+        document.getElementById('age').addEventListener('input', function (event) {
+            const ageValue = parseInt(event.target.value);
+            const isValid = ageValue >= 18 && ageValue <= 60;
+            displayValidationMessage("age", isValid ? "" : "Age must be between 18 and 60 years");
+        });
+
+        document.querySelectorAll('input[name="gender"]').forEach(function (radioButton) {
+            radioButton.addEventListener('change', function () {
+                document.querySelectorAll('input[name="gender"]').forEach(function (rb) {
+                    rb.classList.remove("valid", "invalid");
+                });
+                radioButton.classList.add("valid");
+                displayValidationMessage("gender", "");
+            });
+        });
+
+        document.getElementById('membership').addEventListener('change', function (event) {
+            const isValid = event.target.value !== "";
+            displayValidationMessage("membership", isValid ? "" : "Please select a membership type");
+        });
+
+        document.getElementById('password').addEventListener('input', function (event) {
+            const passwordValue = event.target.value;
+            const isValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/.test(passwordValue);
+            displayValidationMessage("password", isValid ? "" : "Password must contain at least 6 characters with uppercase, lowercase, number, and special character");
+        });
+
+        document.getElementById('confirmPassword').addEventListener('input', function (event) {
+            const isValid = event.target.value === document.getElementById('password').value;
+            displayValidationMessage("confirm", isValid ? "" : "Passwords do not match");
+        });
+
+        document.getElementById('phone').addEventListener('input', function (event) {
+            const isValid = /^\d{10}$/.test(event.target.value);
+            displayValidationMessage("phone", isValid ? "" : "Phone number must be exactly 10 digits");
+        });
+
+        document.getElementById('dob').addEventListener('change', function (event) {
+            const isValid = new Date(event.target.value) <= new Date();
+            displayValidationMessage("dob", isValid ? "" : "Date of birth cannot be in the future");
+        });
+
+        document.getElementById('photo').addEventListener('change', function (event) {
+            const selectedFile = event.target.files[0];
+            if (!selectedFile) return;
+
+            const isValid = /(jpg|png)$/i.test(selectedFile.name) && selectedFile.size <= 1048576;
+            displayValidationMessage("photo", isValid ? "" : "Please upload JPG or PNG file under 1MB");
+        });
+
+        document.getElementById('terms').addEventListener('change', function (event) {
+            const isValid = event.target.checked;
+            displayValidationMessage("terms", isValid ? "" : "You must accept the terms and conditions");
+        });
+
+        gymForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            if (!submitButton.disabled) {
+                successMessage.textContent = "Form submitted successfully! Welcome to FitZone Gym.";
+                gymForm.reset();
+                document.querySelectorAll('.error-message').forEach(function (el) { el.textContent = ""; });
+                document.querySelectorAll('input').forEach(function (el) { el.classList.remove('valid', 'invalid'); });
+                document.querySelectorAll('select').forEach(function (el) { el.classList.remove('valid', 'invalid'); });
+                submitButton.disabled = true;
+            }
+        });
+
+        gymForm.addEventListener('reset', function () {
+            document.querySelectorAll('.error-message').forEach(function (el) { el.textContent = ""; });
+            document.querySelectorAll('input').forEach(function (el) { el.classList.remove('valid', 'invalid'); });
+            document.querySelectorAll('select').forEach(function (el) { el.classList.remove('valid', 'invalid'); });
+            successMessage.textContent = "";
+            submitButton.disabled = true;
+        });
+    </script>
+</body>
+
+</html>
